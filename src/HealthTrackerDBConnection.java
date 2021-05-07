@@ -45,6 +45,7 @@ public class HealthTrackerDBConnection {
 	
 	public void closeConnection() {
 			try {
+				System.out.println("Closing Connection");
 				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();

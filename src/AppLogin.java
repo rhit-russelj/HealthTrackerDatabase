@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Random;
 
@@ -57,11 +58,24 @@ public class AppLogin {
 		return false;
 	}
 
-	public static boolean register(String username, String sex, Date dob, String email, String password) {
+	public static boolean register(String username, String sex, String dob, String email, String password) {
 		//Done: Task 6
 		byte[] passS = getNewSalt();
 		String hashPass=hashPassword(passS, password);
+		SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
+		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
+		Date parsedDate;
 		CallableStatement cs=null;
+		
+		try {
+			java.util.Date unformatetedDob=unformattedDobString.parse(dob);
+			String parsedDateString=parsedDateStringFormat.format(unformatetedDob);
+			parsedDate=Date.valueOf(parsedDateString);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Date not valid");
+			return false;
+		}
+		
 		System.out.println(username+ "  "+sex+ "  "+ dob+ "  "+ email+ "  "+ password+ "  "+Main.conn);
 		try {
 			System.out.println(Main.conn.getConnection());
@@ -69,7 +83,7 @@ public class AppLogin {
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, username);
 			cs.setString(3, sex);
-			cs.setDate(4, dob);
+			cs.setDate(4, parsedDate);
 			cs.setString(5, email);
 			cs.setString(6, hashPass);
 			cs.setBytes(7, passS);
