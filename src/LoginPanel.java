@@ -51,7 +51,7 @@ public class LoginPanel extends JPanel{
 				//System.out.println("Login");
 				if(attemptLogin(email.getText(), pass.getText())) {
 					HomePage user=new HomePage(email.getText(), Main.conn);
-					Main.loggedUser = email.getText();
+					Main.loggedUser =email.getText();
 					user.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					user.setVisible(true);
 					closeFrame();

@@ -81,8 +81,6 @@ public class RegisterFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//System.out.println("Login");
-				System.out.println(dob.getText());
 				if(AttemptRegister(userName.getText(), (String) sex.getSelectedItem(), dob.getText(), email.getText(), password.getText())) {
 					HomePage user=new HomePage(email.getText(), Main.conn);
 					Main.loggedUser = email.getText();

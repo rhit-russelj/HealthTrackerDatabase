@@ -29,7 +29,6 @@ public class HealthTrackerDBConnection {
             System.out.println(conString);
 
         	connection=DriverManager.getConnection(conString);
-        	System.out.println(connection);
         	return true;
         }catch (Exception e) {
 			e.printStackTrace();

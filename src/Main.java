@@ -10,7 +10,6 @@ public class Main {
 	static HealthTrackerDBConnection conn=null;
 	public static String loggedUser = "";
 	public static JFrame mainScreen;
-	
 	public static void init() {
 		String uname = "", pass = "", name = "", server = "";
 		try (InputStream input = new FileInputStream("config.properties")) {

@@ -76,9 +76,7 @@ public class AppLogin {
 			return false;
 		}
 		
-		System.out.println(username+ "  "+sex+ "  "+ dob+ "  "+ email+ "  "+ password+ "  "+Main.conn);
 		try {
-			System.out.println(Main.conn.getConnection());
 			cs = Main.conn.getConnection().prepareCall("{ ? = CALL RegisterUser( ? , ? , ?, ?, ?, ? )}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, username);
@@ -113,7 +111,6 @@ public class AppLogin {
 	}
 
 	public static String hashPassword(byte[] salt, String password) {
-		System.out.println(salt);
 		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 		SecretKeyFactory f;
 		byte[] hash = null;
