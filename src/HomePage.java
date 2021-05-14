@@ -12,6 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import util.HintTextField;
 
 public class HomePage extends JFrame{
 	public HomePage(String user, HealthTrackerDBConnection conn) {
@@ -95,6 +98,44 @@ public class HomePage extends JFrame{
 			}
 		});
 		
+		editAccButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JFrame checkFrame=new JFrame();
+				JPanel checkP=new JPanel();
+				checkP.setLayout(new BoxLayout(checkP, BoxLayout.X_AXIS));
+				JLabel passL=new JLabel("Password: ");
+				HintTextField passF=new HintTextField("Password"); 
+				JButton confirmB=new JButton("Confirm Password");
+				
+				checkP.add(passL);
+				checkP.add(passF);
+				checkP.add(confirmB);
+				checkFrame.add(checkP);
+				checkFrame.pack();
+				checkFrame.setVisible(true);
+				checkFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				
+				confirmB.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						boolean secInt=AppLogin.login(user, passF.getText());
+						if(secInt) {
+							AccountEditFrame accF=new AccountEditFrame(user, conn);
+							accF.setVisible(true);
+							accF.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+							checkFrame.setVisible(false);
+						} else {
+							checkFrame.dispose();
+						}
+					}
+				});
+			}
+		});
 		
 		//Adds Action to Update a Health Users Stats. Opens a new JFrame to change information
 		updateStats.addActionListener(new ActionListener() {
@@ -105,6 +146,17 @@ public class HomePage extends JFrame{
 				UserStatsFrame popUp = new UserStatsFrame();
 				popUp.setVisible(true);
 				popUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			}
+		});
+		
+		addGoalButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GoalFrame goalPopUp = new GoalFrame();
+				goalPopUp.setVisible(true);
+				goalPopUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			}
 		});
 		

@@ -18,7 +18,7 @@ public class UserStatsFrame extends JFrame {
 		JPanel labelPanel = new JPanel();
 		JPanel inputPanel = new JPanel();
 
-		JLabel userIDL = new JLabel("UserID |");
+	//	JLabel userIDL = new JLabel("UserID |");
 		JLabel heightL = new JLabel("    Height |");
 		JLabel BMIL = new JLabel("BMI |");
 		JLabel weightL = new JLabel("    Weight    |");
@@ -26,7 +26,7 @@ public class UserStatsFrame extends JFrame {
 		labelPanel.setLayout(new FlowLayout());
 		inputPanel.setLayout(new FlowLayout());
 
-		HintTextField UserID = new HintTextField("i.e. 1");
+	//	HintTextField UserID = new HintTextField("i.e. 1");
 		HintTextField Height = new HintTextField("i.e. 5.5");
 		HintTextField BMI = new HintTextField("20");
 		HintTextField Weight = new HintTextField("Recorded in lbs.");
@@ -34,12 +34,12 @@ public class UserStatsFrame extends JFrame {
 		JButton submitButton = new JButton("Submit");
 		JButton closeButton = new JButton("Close");
 
-		labelPanel.add(userIDL);
+	//	labelPanel.add(userIDL);
 		labelPanel.add(heightL);
 		labelPanel.add(BMIL);
 		labelPanel.add(weightL);
 
-		inputPanel.add(UserID);
+	//	inputPanel.add(UserID);
 		inputPanel.add(Height);
 		inputPanel.add(BMI);
 		inputPanel.add(Weight);
@@ -58,9 +58,9 @@ public class UserStatsFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (UserID.getText().equals("i.e. 1")) {
-						UserID.setText("0");
-					}
+					//if (UserID.getText().equals("i.e. 1")) {
+					//	UserID.setText("0");
+					//}
 					if (Height.getText().equals("i.e. 5.5")) {
 						Height.setText("0");
 					}
@@ -70,7 +70,7 @@ public class UserStatsFrame extends JFrame {
 					if (Weight.getText().equals("recorded in lbs.")) {
 						Weight.setText("0");
 					}
-					int i = c.addStats(Integer.parseInt(UserID.getText()), Integer.parseInt(Height.getText()),
+					int i = c.addStats(c.getUser(Main.loggedUser), Integer.parseInt(Height.getText()),
 							Integer.parseInt(BMI.getText()), Integer.parseInt(Weight.getText()));
 
 					if (i <= 0) {
