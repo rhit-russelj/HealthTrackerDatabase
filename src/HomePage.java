@@ -1,85 +1,37 @@
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class HomePage extends JFrame{
-	public HomePage(String user, HealthTrackerDBConnection conn) {
+
+	public HomePage(String text, HealthTrackerDBConnection conn) {
 		// TODO Auto-generated constructor stub
 		this.setSize(1000,1000);
-		DatabaseCommunication c=new DatabaseCommunication(user, conn);
 		
 		JPanel mainP=new JPanel();
 		mainP.setLayout(null);
-		JLabel mainL=new JLabel("Welcome "+c.getName()+ "!");
-		mainL.setFont(new Font("Verdana", Font.BOLD, 40));
-		mainL.setAlignmentX(CENTER_ALIGNMENT);
-
-		
-		JPanel statsPanel=new JPanel();
-		statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
-		HashMap<String, String>userStats=new HashMap<String, String>();
-		userStats=c.getUserStats();
-		System.out.println("Welcome "+user);
-		System.out.println(userStats.get("Height")+userStats.get("BMI")+userStats.get("Weight"));
-		JLabel statsLabel=new JLabel("User Body Stats:");
-		JLabel heightL=new JLabel("Height: "+userStats.get("Height"));
-		JLabel bmiL=new JLabel("Body Mass Index (BMI): "+userStats.get("BMI"));
-		JLabel weightL=new JLabel("Weight: "+userStats.get("Weight"));
-		statsPanel.add(statsLabel);
-		statsPanel.add(heightL);
-		statsPanel.add(bmiL);
-		statsPanel.add(weightL);
-		for(Component j: statsPanel.getComponents()) {
-			j.setFont(new Font("Verdana", Font.BOLD, 17));
-		}
-		
+		JLabel mainL=new JLabel("Successfully Logged In. This Page will be the main point of travel on this application"
+				+ ". There are limited options at the moment, but it will expand in time. Hope you enjoy!");
 		
 		JButton addWorkout=new JButton("Add Workout Session");
-
-		
-		
-		JPanel buttonPanel=new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		JButton updateStats=new JButton("Update Body Stats");
-		JButton addGoalButton = new JButton("Add Goal");
-		JButton editAccButton = new JButton("Edit Account");
-		JButton editWorkoutButton = new JButton("Edit Previous Workout");
 		JButton signOut = new JButton("Log Out");
-		mainL.setBounds(0, 20, this.getWidth(), 40);		
-		addWorkout.setBounds(2*this.getWidth()/3-this.getWidth()/8, this.getHeight()/4, this.getWidth()/4, 100);
-		statsPanel.setBounds(0, this.getHeight()/4, this.getWidth()/2, 200);
-		buttonPanel.setBounds(0, this.getHeight()/2, this.getWidth()/2, 300);
+		
+		mainL.setBounds(0, 20, this.getWidth(), 40);
+		addWorkout.setBounds(this.getWidth()/3-this.getWidth()/8, this.getHeight()/2, this.getWidth()/4, 60);
+		updateStats.setBounds(this.getWidth()*2/3-this.getWidth()/8, this.getHeight()/2, this.getWidth()/4, 60);
+		signOut.setBounds(this.getWidth()/2-70, this.getHeight()*3/4, 140, 40);
 
-		
-		buttonPanel.add(addGoalButton);
-		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
-		buttonPanel.add(editWorkoutButton);
-		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
-		buttonPanel.add(updateStats);
-		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
-		buttonPanel.add(editAccButton);
-		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
-		buttonPanel.add(signOut);
-		for(Component j: buttonPanel.getComponents()) {
-			j.setFont(new Font("Verdana", Font.BOLD, 17));
-		}
-		
 		
 		mainP.add(mainL);
 		mainP.add(addWorkout);
-		mainP.add(statsPanel);
-		mainP.add(buttonPanel);
+		mainP.add(updateStats);
+		mainP.add(signOut);
 		this.add(mainP);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
