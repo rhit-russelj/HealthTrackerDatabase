@@ -18,21 +18,46 @@ public class DatabaseCommunication {
 	
 	public ArrayList<String> getExercises(){
 		String query="Select Name From [Default_Exercise]";
-		ArrayList<String> excersices=new ArrayList<String>();
-		excersices.add("Choose");
+		ArrayList<String> exercises=new ArrayList<String>();
+		exercises.add("Choose");
 		
 		try {
 			Statement stmt= con.getConnection().createStatement();
 			ResultSet rs=stmt.executeQuery(query);
 			while(rs.next()) {
-				excersices.add(rs.getString("Name"));
+				exercises.add(rs.getString("Name"));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Something went wrong with the connection.");
 		}
-		return excersices;
+		return exercises;
 		
+	}
+	
+	public int addStats(int uID, int h, int BMI, int w) {
+		CallableStatement cs = null;
+		int userID = getUser(this.user);
+		if (uID != userID) {
+			System.out.println("Incorrect UserID");
+			return(2); 
+		}
+		try {
+			cs = this.con.getConnection().prepareCall("{? = CALL AddStats( ?, ?, ?, ?)}");
+			cs.registerOutParameter(1, Types.INTEGER);
+			cs.setInt(2, userID);
+			cs.setInt(3, h);
+			cs.setInt(4, BMI);
+			cs.setInt(5, w);
+			cs.execute();
+			Main.conn.getConnection().commit();
+			System.out.println("Result of add user stats is: " + cs.getInt(1));
+			return cs.getInt(1);
+		} catch (Exception e) {
+			System.out.println("Parsing Issue");
+			e.printStackTrace();
+			return(6);
+		}
 	}
 	
 	public int addWorkout(String exerciseName, int reps, int sets, int time, int weight, int cal, String date) {
