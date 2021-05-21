@@ -79,6 +79,7 @@ public class DatabaseCommunication {
 		}
 	}
 	
+	
 	public int addWorkout(String exerciseName, int reps, int sets, int time, int weight, int cal, String date) {
 		CallableStatement cs = null;
 		CallableStatement goalCheck=null;

@@ -58,9 +58,6 @@ public class UserStatsFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//if (UserID.getText().equals("i.e. 1")) {
-					//	UserID.setText("0");
-					//}
 					if (Height.getText().equals("i.e. 5.5")) {
 						Height.setText("0");
 					}
