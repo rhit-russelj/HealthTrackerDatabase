@@ -33,7 +33,6 @@ public class DatabaseCommunication {
 			System.out.println("Something went wrong with the connection.");
 		}
 		return exercises;
-		
 	}
 	
 	public int addStats(int uID, int h, int BMI, int w) {
@@ -138,12 +137,10 @@ public HashMap<String, String> getUserStats() {
 		PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
 		stmt.setString(1, user);
 		ResultSet rs=stmt.executeQuery();
-		if(!rs.first()) {
-			return result;
-		}else {
-			result.put("Height", rs.getString("Height"));
+		while(rs.next()) {
+			result.put("Height", rs.getString("Height")+" ft");
 			result.put("BMI",Integer.toString(rs.getInt("BMI")));
-			result.put("Weight", Integer.toString(rs.getInt("Weight")));
+			result.put("Weight", Integer.toString(rs.getInt("Weight"))+" lbs");
 			return result;
 		}
 	} catch (Exception e) {
@@ -152,6 +149,86 @@ public HashMap<String, String> getUserStats() {
 	}
 	return result;
 	}
+
+
+public int addGoal(String exerciseName, int reps, int sets, int time, int weight, String date) {
+	CallableStatement cs = null;
+	SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
+	SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
+	Date parsedDate;
+	int userID=getUser(this.user);
+	try {
+		java.util.Date unformatetedDob=unformattedDobString.parse(date);
+		String parsedDateString=parsedDateStringFormat.format(unformatetedDob);
+		parsedDate=Date.valueOf(parsedDateString);
+		cs = this.con.getConnection().prepareCall("{ ? = CALL addGoal( ? , ?, ?, ?, ?, ?, ? )}");
+		cs.registerOutParameter(1, Types.INTEGER);
+		cs.setInt(2, userID);
+		cs.setString(3, exerciseName);
+		cs.setInt(4, reps);
+		cs.setInt(5, sets);
+		cs.setInt(6, time);
+		cs.setInt(7, weight);
+		cs.setDate(8, parsedDate);
+		cs.execute();
+		Main.conn.getConnection().commit();
+		return cs.getInt(1);
+		
+	} catch (Exception e) {
+		// TODO: handle exception
+		System.out.println("Parsing issue");
+		e.printStackTrace();
+		return 6;
+	}
+}
+
+public int modifyAccount(String email,String name,String sex,String dob,String pass) {
+	CallableStatement cs = null;
+	SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
+	SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
+	Date parsedDate;
+	int userID=getUser(this.user);
+	try {
+		java.util.Date unformatetedDob=unformattedDobString.parse(dob);
+		String parsedDateString=parsedDateStringFormat.format(unformatetedDob);
+		parsedDate=Date.valueOf(parsedDateString);
+		cs = this.con.getConnection().prepareCall("{ ? = CALL Edit_Account( ? , ? , ?, ?, ?, ? )}");
+		cs.registerOutParameter(1, Types.INTEGER);
+		cs.setInt(2, userID);
+		cs.setString(3, email);
+		cs.setString(4, name);
+		cs.setString(5, sex);
+		cs.setDate(6, parsedDate);
+		cs.setString(7, pass);
+		cs.execute();
+		Main.conn.getConnection().commit();
+		return cs.getInt(1);
+		
+	} catch (Exception e) {
+		// TODO: handle exception
+		System.out.println("Parsing issue");
+		e.printStackTrace();
+		return 6;
+	}
+}
+
+
+public byte[] getSalt(String user2) {
+	// TODO Auto-generated method stub
+	String query="Select PasswordSalt From HealthUser where email=?";
+	byte[] result = null;
+	try {
+		PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
+		stmt.setString(1, user2);
+		ResultSet rs=stmt.executeQuery();
+		result=rs.getBytes("PasswordSalt");
+	} catch (Exception e) {
+		// TODO: handle exception
+		System.out.println("Something went wrong with the connection.");
+	}
+	return result;
+	
+}
 }
 
 
