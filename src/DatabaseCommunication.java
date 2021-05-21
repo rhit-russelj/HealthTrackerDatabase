@@ -83,14 +83,9 @@ public class DatabaseCommunication {
 	public int addWorkout(String exerciseName, int reps, int sets, int time, int weight, int cal, String date) {
 		CallableStatement cs = null;
 		CallableStatement goalCheck=null;
-		SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
-		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
-		Date parsedDate;
 		int userID=getUser(this.user);
 		try {
-			java.util.Date unformatetedDob=unformattedDobString.parse(date);
-			String parsedDateString=parsedDateStringFormat.format(unformatetedDob);
-			parsedDate=Date.valueOf(parsedDateString);
+			Date parsedDate=Date.valueOf((parseDateToSql(date)));
 			cs = this.con.getConnection().prepareCall("{ ? = CALL Add_Workout( ? , ?, ?, ?, ?, ?, ?, ? )}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, exerciseName);
@@ -104,6 +99,12 @@ public class DatabaseCommunication {
 			cs.execute();
 			Main.conn.getConnection().commit();
 			
+			goalCheck=this.con.getConnection().prepareCall("{ ? = CALL GoalCompleted( ?, ? )}");
+			goalCheck.registerOutParameter(1, Types.INTEGER);
+			goalCheck.setInt(2, userID);
+			goalCheck.setString(3, exerciseName);
+			goalCheck.execute();
+			Main.conn.getConnection().commit();
 			goalCheck=this.con.getConnection().prepareCall("{ ? = CALL GoalCompleted( ?, ? )}");
 			goalCheck.registerOutParameter(1, Types.INTEGER);
 			goalCheck.setInt(2, userID);
@@ -543,13 +544,6 @@ public class DatabaseCommunication {
 		return null;
 		
 	}
-
-
-
-
-
-
-
 
 
 }

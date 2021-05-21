@@ -203,5 +203,4 @@ public class WorkoutInputPanel extends JPanel{
 	public String getDate() {
 		return workoutDate.getText();
 	}
-	
 }
