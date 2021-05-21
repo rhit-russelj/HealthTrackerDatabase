@@ -4,13 +4,16 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -56,6 +59,7 @@ public class HomePage extends JFrame{
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		JButton updateStats=new JButton("Update Body Stats");
 		JButton addGoalButton = new JButton("Add Goal");
+		JButton modGoalButton= new JButton("Modify Goal");
 		JButton editAccButton = new JButton("Edit Account");
 		JButton editWorkoutButton = new JButton("Edit Previous Workout");
 		JButton signOut = new JButton("Log Out");
@@ -66,6 +70,8 @@ public class HomePage extends JFrame{
 
 		
 		buttonPanel.add(addGoalButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
+		buttonPanel.add(modGoalButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
 		buttonPanel.add(editWorkoutButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
@@ -91,18 +97,114 @@ public class HomePage extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				WorkoutFrame workoutPopUp = new WorkoutFrame();
 				workoutPopUp.setVisible(true);
 				workoutPopUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
 			}
 		});
 		
+		modGoalButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame frame=new JFrame("Choose Goal");
+				ArrayList<String> gls=new ArrayList<String>();
+				try {
+					gls=c.getGoals();
+				} catch (Exception e) {
+					System.out.println("Problem Retrieving goals");
+				}
+				if(gls.size()==0) {
+					JOptionPane.showMessageDialog(null, "You currently do not have any goals! Try setting one by clicking the Add Goal Button!");
+					return;
+				}
+				JComboBox gCombo=new JComboBox(gls.toArray());
+				frame.add(gCombo);
+				frame.pack();
+				frame.setVisible(true);
+				frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				
+				gCombo.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String exerciseN=(String) gCombo.getSelectedItem();
+						GoalModifyingFrame gmF=new GoalModifyingFrame(exerciseN);
+						gmF.setVisible(true);
+						gmF.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+						frame.setVisible(false);
+					}
+				});
+			}
+		});
+		
+		editWorkoutButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame exerciseFrame=new JFrame("Choose Exercise");
+				ArrayList<String> recEs=new ArrayList<String>();
+				try {
+					recEs=c.getRecExercises();
+				} catch (Exception e) {
+					System.out.println("Problem Retrieving Recorded Exercises");
+				}
+				if(recEs.size()==0) {
+					JOptionPane.showMessageDialog(null, "You currently do not have any Recorded Workout Sessions! Try creating one by clicking the Add Workout Button!");
+					return;
+				}
+				JComboBox exCombo=new JComboBox(recEs.toArray());
+				exerciseFrame.add(exCombo);
+				exerciseFrame.pack();
+				exerciseFrame.setVisible(true);
+				exerciseFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				
+				exCombo.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg1) {
+						JFrame dFrame=new JFrame("Choose Exercise");
+						ArrayList<String> recDateList=new ArrayList<String>();
+						String exerciseN=(String) exCombo.getSelectedItem();
+
+						try {
+							recDateList=c.getRecExercises(exerciseN);
+						} catch (Exception e) {
+							System.out.println("Problem Retrieving Recorded Exercises");
+						}
+						if(recDateList.size()==0) {
+							JOptionPane.showMessageDialog(null, "You currently do not have any Recorded Workout Sessions of this Exercise! Try creating one by clicking the Add Workout Button!");
+							return;
+						}
+						JComboBox dCombo=new JComboBox(recDateList.toArray());
+						dFrame.add(dCombo);
+						dFrame.pack();
+						dFrame.setVisible(true);
+						dFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+						exerciseFrame.setVisible(false);
+
+						dCombo.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								String inputDate=(String) dCombo.getSelectedItem();
+								WorkoutFrame mdF=new WorkoutFrame(exerciseN, inputDate);
+								mdF.setVisible(true);
+								mdF.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+								dFrame.setVisible(false);
+							}
+						});
+					}
+				});				
+			}
+		});
+		
+		
 		editAccButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				JFrame checkFrame=new JFrame();
 				JPanel checkP=new JPanel();
 				checkP.setLayout(new BoxLayout(checkP, BoxLayout.X_AXIS));
