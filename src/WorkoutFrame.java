@@ -19,56 +19,21 @@ public class WorkoutFrame extends JFrame{
 	public WorkoutFrame() {
 		this.setSize(700, 400);
 		this.setLayout(null);
-		JPanel labelPanel=new JPanel(); 
-		JPanel inputPanel=new JPanel();
 		
-		JLabel exerciseL = new JLabel("Exercise |");
-		JLabel repL = new JLabel("    Reps |");
-		JLabel setL = new JLabel("Sets |");
-		JLabel timeL = new JLabel("    Time     |");
-		JLabel weightL = new JLabel("    Weight    |");
-		JLabel calL = new JLabel("Calories |");
-		JLabel dateL = new JLabel("Workout Date");
-		DatabaseCommunication c=new DatabaseCommunication(Main.loggedUser, Main.conn);
-		labelPanel.setLayout(new FlowLayout());
-		inputPanel.setLayout(new FlowLayout());
-		JComboBox exercisesChoice=new JComboBox(c.getExercises().toArray());
-		AutoCompletion.enable(exercisesChoice);
+		DatabaseCommunication c= new DatabaseCommunication(Main.loggedUser, Main.conn);
 		
-		HintTextField reps =new HintTextField("i.e. 3");
-		HintTextField sets =new HintTextField("i.e. 8");
-		HintTextField time =new HintTextField("i.e. 3 (in seconds)");
-		HintTextField weight =new HintTextField("recorded in lbs.");
-		HintTextField cal =new HintTextField("i.e. 300");
-		DateTextField workoutDate=new DateTextField();
+		WorkoutInputPanel workoutInputPanel=new WorkoutInputPanel("Workout Date");
 		
 		JButton submitButton= new JButton("Submit");
 		JButton closeButton = new JButton("Close");
 		
-		
-		labelPanel.add(exerciseL);
-		labelPanel.add(repL);
-		labelPanel.add(setL);
-		labelPanel.add(timeL);
-		labelPanel.add(weightL);
-		labelPanel.add(calL);
-		labelPanel.add(dateL);
-		
-		inputPanel.add(exercisesChoice);
-		inputPanel.add(reps);
-		inputPanel.add(sets);
-		inputPanel.add(time);
-		inputPanel.add(weight);
-		inputPanel.add(cal);
-		inputPanel.add(workoutDate);
-		this.add(labelPanel);
-		this.add(inputPanel);
+		this.add(workoutInputPanel);
 		this.add(submitButton);
 		this.add(closeButton);
 		
-		labelPanel.setBounds(0, 40, this.getWidth(), 40);
-		inputPanel.setBounds(0, 80, this.getWidth(), 40);
-		submitButton.setBounds(this.getWidth()/2-40, inputPanel.getY()+40, 80, 30);
+		workoutInputPanel.setBounds(0, 80, this.getWidth(), 80);
+		workoutInputPanel.setVisible(true);
+		submitButton.setBounds(this.getWidth()/2-40, workoutInputPanel.getY()+80, 80, 30);
 		closeButton.setBounds(this.getWidth()/2-40, submitButton.getY()+40, 80, 30);
 		
 		submitButton.addActionListener(new ActionListener() {
@@ -76,19 +41,14 @@ public class WorkoutFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if(reps.getText().equals("i.e. 3")) {reps.setText("0");}
-					if(sets.getText().equals("i.e. 8")) {sets.setText("0");}
-					if(time.getText().equals("i.e. 3 (in seconds)")) {time.setText("0");}
-					if(weight.getText().equals("recorded in lbs.")) {weight.setText("0");}
-					if(cal.getText().equals("i.e. 300")) {cal.setText("0");}
 					int i=c.addWorkout(
-							exercisesChoice.getSelectedItem().toString(), 
-							Integer.parseInt(reps.getText()), 
-							Integer.parseInt(sets.getText()),
-							Integer.parseInt(time.getText()),
-							Integer.parseInt(weight.getText()),
-							Integer.parseInt(cal.getText()),
-							workoutDate.getText());
+							workoutInputPanel.getExercise(), 
+							Integer.parseInt(workoutInputPanel.getReps()), 
+							Integer.parseInt(workoutInputPanel.getSets()),
+							Integer.parseInt(workoutInputPanel.getTime()),
+							Integer.parseInt(workoutInputPanel.getWeight()),
+							Integer.parseInt(workoutInputPanel.getCal()),
+							workoutInputPanel.getDate());
 					
 					if(i<=0) {
 						closeFrame();
