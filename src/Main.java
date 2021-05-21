@@ -22,7 +22,7 @@ public class Main {
 			pass = prop.getProperty("db.pass");
 			server = prop.getProperty("db.server");
 		} catch (IOException ex) {
-			 ex.printStackTrace();
+			// ex.printStackTrace();
 		}
 		conn = new HealthTrackerDBConnection(server, name);
 		System.out.println(conn.connect(uname, pass) ? "Connected!" : "Failed to Connect.");
