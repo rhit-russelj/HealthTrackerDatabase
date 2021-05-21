@@ -66,6 +66,11 @@ public class AppLogin {
 		Date parsedDate;
 		CallableStatement cs=null;
 		
+		if(password.equals("")||password.equals("Password")) {
+			JOptionPane.showMessageDialog(null, "Invalid password");
+			return false;
+		}
+		
 		try {
 			java.util.Date unformatetedDob=unformattedDobString.parse(dob);
 			String parsedDateString=parsedDateStringFormat.format(unformatetedDob);

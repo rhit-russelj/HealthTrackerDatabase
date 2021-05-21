@@ -526,7 +526,7 @@ public class DatabaseCommunication {
 	}
 	
 	public XYDataset getCords(String exerciseName){
-		String query="Select Rep, Sets, Time, Weight, Calories, DateOfExercise from RecordedExercise where UserID = ? and ExerciseName= ?";
+		String query="Select Rep, Sets, Time, Weight, CaloriesBurned, DateOfExercise from RecordedExercise where UserID = ? and ExerciseName= ?";
 		int userID=getUser(this.user);
 		TimeSeries series1 = new TimeSeries("Reps");
 		TimeSeries series2 = new TimeSeries("Sets");
@@ -537,17 +537,23 @@ public class DatabaseCommunication {
 
 		
 		try {
-			PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
+			PreparedStatement stmt=	con.getConnection().prepareStatement(query);
 			stmt.setInt(1, userID);
 			stmt.setString(2, exerciseName);
 			ResultSet rs=stmt.executeQuery();
 			while(rs.next()) {
 				Date tempDate=rs.getDate("DateOfExercise");
+				System.out.println(tempDate.toString());
 				series1.add(new Day(tempDate), rs.getInt("Rep"));
+				System.out.println(new Day(tempDate).toString());
 				series2.add(new Day(tempDate), rs.getInt("Sets"));
+				System.out.println(new Day(tempDate).toString()+4);
 				series3.add(new Day(tempDate), rs.getInt("Time"));
+				System.out.println(new Day(tempDate).toString()+1);
 				series4.add(new Day(tempDate), rs.getInt("Weight"));
-				series5.add(new Day(tempDate), rs.getInt("Calories"));
+				System.out.println(new Day(tempDate).toString()+2);
+				series5.add(new Day(tempDate), rs.getInt("CaloriesBurned"));
+				System.out.println(new Day(tempDate).toString()+3);
 
 			}
 		} catch (Exception e) {

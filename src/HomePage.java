@@ -32,8 +32,13 @@ import org.jfree.ui.RectangleInsets;
 import util.HintTextField;
 
 public class HomePage extends JFrame{
+	private JFreeChart chart;
+	private ChartPanel panel;
+	private JPanel mainP;
+	
 	public HomePage(String user, HealthTrackerDBConnection conn) {
 		// TODO Auto-generated constructor stub
+		JFrame self=this;
 		this.setSize(1000,1000);
 		DatabaseCommunication c=new DatabaseCommunication(user, conn);
 		
@@ -73,8 +78,8 @@ public class HomePage extends JFrame{
 		}
 		JComboBox exerCombo=new JComboBox(exerL.toArray());
 		
-		JFreeChart chart = createChart(c.getCords("Back Extension"));
-        ChartPanel panel = new ChartPanel(chart);
+		this.chart = createChart(c.getCords("Push Up"));
+        this.panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
 
 		
@@ -119,6 +124,16 @@ public class HomePage extends JFrame{
 		this.add(mainP);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		exerCombo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				XYDataset cords= c.getCords((String)exerCombo.getSelectedItem());
+				//changeChart(c.getCords((String)exerCombo.getSelectedItem()));				
+			}
+		});
+		
 		//Adds Action to add workout for a Health User. Opens a new JFrame to add information
 		addWorkout.addActionListener(new ActionListener() {
 			
@@ -340,6 +355,14 @@ editWorkoutButton.addActionListener(new ActionListener() {
 
 	}
 
+	private void changeChart(XYDataset set) {
+		chart = createChart(set);
+        panel = new ChartPanel(chart);
+        System.out.println(panel);
+        panel.setMouseWheelEnabled(true);
+        mainP.add(panel);
+        this.repaint();
+	}
 	private void closeFrame() {
 		//closest I can find atm to remove the frame without affecting other aspects of code
 		this.setVisible(false);
