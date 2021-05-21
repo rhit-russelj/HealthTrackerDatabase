@@ -87,6 +87,8 @@ public class WorkoutInputPanel extends JPanel{
 		JLabel setL = new JLabel("Sets |");
 		JLabel timeL = new JLabel("    Time     |");
 		JLabel weightL = new JLabel("    Weight    |");
+		JLabel calL=new JLabel();
+		if(exOrG.equals("Workout Date")) calL = new JLabel("Calories |");
 		JLabel dateL = new JLabel(exOrG);
 				
 		labelPanel.setLayout(new FlowLayout());
@@ -102,25 +104,18 @@ public class WorkoutInputPanel extends JPanel{
 		sets =new HintTextField(attr.get("sets"));
 		time =new HintTextField(attr.get("time"));
 		weight =new HintTextField(attr.get("weight"));		
+		if(exOrG.equals("Workout Date"))	cal =new HintTextField(attr.get("cal"));
 		
-		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("mm/dd/yyyy");
-		SimpleDateFormat unformattedDobString = new SimpleDateFormat("yyyy-mm-dd");
-		Date unformatetedDob = null;
-		try {
-			unformatetedDob = unformattedDobString.parse(attr.get("date"));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String parsedDateString=parsedDateStringFormat.format(unformatetedDob);		
+		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("MM/dd/yyyy");
 		Date parsedDate = null;
 		try {
-			parsedDate = parsedDateStringFormat.parse(parsedDateString);
+			parsedDate = parsedDateStringFormat.parse(attr.get("date"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		workoutDate=new DateTextField(parsedDate);
+		workoutDate.setEditable(false);
 		
 		
 		labelPanel.add(exerciseL);
@@ -128,6 +123,7 @@ public class WorkoutInputPanel extends JPanel{
 		labelPanel.add(setL);
 		labelPanel.add(timeL);
 		labelPanel.add(weightL);
+		if(exOrG.equals("Workout Date"))	labelPanel.add(calL);
 		labelPanel.add(dateL);
 		
 		inputPanel.add(exercisesChoice);
@@ -135,6 +131,7 @@ public class WorkoutInputPanel extends JPanel{
 		inputPanel.add(sets);
 		inputPanel.add(time);
 		inputPanel.add(weight);
+		if(exOrG.equals("Workout Date"))	inputPanel.add(cal);
 		inputPanel.add(workoutDate);
 		this.add(labelPanel);
 		this.add(inputPanel);
@@ -193,7 +190,14 @@ public class WorkoutInputPanel extends JPanel{
 	}
 	
 	public String getCal() {
-		return (cal.getText().equals("i.e. 300")) ? "0" : reps.getText();
+		String rs4=cal.getText();
+		if(rs4.equals("i.e. 300")) {
+			rs4="0";
+		}
+		if(rs4.equals("") && attr!=null) {
+			rs4=attr.get("cal");
+		}
+		return rs4;
 	}
 	
 	public String getDate() {
