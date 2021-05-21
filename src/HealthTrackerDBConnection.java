@@ -25,14 +25,12 @@ public class HealthTrackerDBConnection {
         conString =conString.replace("${user}", user);
         conString=conString.replace("${pass}", pass);
         try{
-        	//connection=DriverManager.getConnection("jdbc:sqlserver://titan.csse.rose-hulman.edudatabaseName=SodaBaseUserbohnernj30;user=SodaBaseUserbohnernj30;password={c3OxKJo5CR}");
             System.out.println(conString);
 
         	connection=DriverManager.getConnection(conString);
         	return true;
         }catch (Exception e) {
-			e.printStackTrace();
-
+        	System.out.println("Failed to Connect to server and caught in connect");
         	return false;
 		}
         	}
@@ -47,7 +45,7 @@ public class HealthTrackerDBConnection {
 				System.out.println("Closing Connection");
 				connection.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("Failed closing connection");
 			}
 	}
 

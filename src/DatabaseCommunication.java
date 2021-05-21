@@ -7,6 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -74,7 +81,6 @@ public class DatabaseCommunication {
 			return cs.getInt(1);
 		} catch (Exception e) {
 			System.out.println("Parsing Issue");
-			e.printStackTrace();
 			return(6);
 		}
 	}
@@ -105,12 +111,6 @@ public class DatabaseCommunication {
 			goalCheck.setString(3, exerciseName);
 			goalCheck.execute();
 			Main.conn.getConnection().commit();
-			goalCheck=this.con.getConnection().prepareCall("{ ? = CALL GoalCompleted( ?, ? )}");
-			goalCheck.registerOutParameter(1, Types.INTEGER);
-			goalCheck.setInt(2, userID);
-			goalCheck.setString(3, exerciseName);
-			goalCheck.execute();
-			Main.conn.getConnection().commit();
 			if(goalCheck.getInt(1)==1) {
 				return 8;
 			}
@@ -119,7 +119,6 @@ public class DatabaseCommunication {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Parsing issue");
-			e.printStackTrace();
 			return 6;
 		}
 	}
@@ -209,7 +208,6 @@ public class DatabaseCommunication {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Parsing issue");
-			e.printStackTrace();
 			return 6;
 		}
 	}
@@ -239,20 +237,22 @@ public class DatabaseCommunication {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Parsing issue");
-			e.printStackTrace();
 			return 6;
 		}
 	}
 
-	public byte[] getSalt(String user2) {
+	public byte[] getSalt() {
 		// TODO Auto-generated method stub
-		String query="Select PasswordSalt From HealthUser where email=?";
+		String query="Select PasswordSalt From HealthUser where id=?";
+		int userId=getUser(user);
+		System.out.println(userId);
 		byte[] result = null;
 		try {
 			PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
-			stmt.setString(1, user2);
+			stmt.setInt(1, userId);
 			ResultSet rs=stmt.executeQuery();
-			result=rs.getBytes("PasswordSalt");
+			System.out.println(rs.getBytes("PasswordSalt"));
+			return rs.getBytes("PasswordSalt");
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Something went wrong with the connection.");
@@ -280,7 +280,6 @@ public class DatabaseCommunication {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Goal Completed caught an error");
-			e.printStackTrace();
 			return -1;
 		}
 		if(result>=2&&result<=4) {
@@ -374,7 +373,6 @@ public class DatabaseCommunication {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Parsing issue");
-			e.printStackTrace();
 			return 6;
 		}	
 	}
@@ -435,7 +433,6 @@ public class DatabaseCommunication {
 			
 		} catch (Exception e) {
 			System.out.println("Parsing issue on delete");
-			e.printStackTrace();
 			return 6;
 		}
 	}	
@@ -514,7 +511,6 @@ public class DatabaseCommunication {
 			
 		} catch (Exception e) {
 			System.out.println("Parsing issue in modifying workout");
-			e.printStackTrace();
 			return 6;
 		}
 	}
@@ -529,12 +525,44 @@ public class DatabaseCommunication {
 		
 	}
 	
-	public ArrayList<Integer> getCords(String attributeName, String exerciseName){
-		String attr=formatAttribute(attributeName);
-		String query="Select "+attr+", DateOfExercise from RecordedExercise where UserID = ? and ";
+	public XYDataset getCords(String exerciseName){
+		String query="Select Rep, Sets, Time, Weight, Calories, DateOfExercise from RecordedExercise where UserID = ? and ExerciseName= ?";
+		int userID=getUser(this.user);
+		TimeSeries series1 = new TimeSeries("Reps");
+		TimeSeries series2 = new TimeSeries("Sets");
+		TimeSeries series3 = new TimeSeries("Time");
+		TimeSeries series4 = new TimeSeries("Weight");
+		TimeSeries series5 = new TimeSeries("Calories");
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+
+		
+		try {
+			PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
+			stmt.setInt(1, userID);
+			stmt.setString(2, exerciseName);
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				Date tempDate=rs.getDate("DateOfExercise");
+				series1.add(new Day(tempDate), rs.getInt("Rep"));
+				series2.add(new Day(tempDate), rs.getInt("Sets"));
+				series3.add(new Day(tempDate), rs.getInt("Time"));
+				series4.add(new Day(tempDate), rs.getInt("Weight"));
+				series5.add(new Day(tempDate), rs.getInt("Calories"));
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Failed to parse Dates or Attributes");
+			return new TimeSeriesCollection();
+		}
+		dataset.addSeries(series1);
+		dataset.addSeries(series2);
+		dataset.addSeries(series3);
+		dataset.addSeries(series4);
+		dataset.addSeries(series5);
 		//Date[] xVals=new Date[]();
 		//Integer[] yValues=new Integer[];
-		return null;
+		return dataset;
 		
 	}
 	

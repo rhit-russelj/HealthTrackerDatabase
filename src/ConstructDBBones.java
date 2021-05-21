@@ -87,7 +87,7 @@ public class ConstructDBBones {
 					URI test=new URL(tempVidURL).toURI();
 				} catch (Exception e) {
 					System.out.println("Unable to parse necessary columns. Line not inserted.");
-					//e.printStackTrace();
+
 					continue;
 				}
 				if(intRep==-1) continue;
@@ -110,7 +110,7 @@ public class ConstructDBBones {
 
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Ran into issues loading file into db");
 		}
 
 		return -1;
@@ -135,7 +135,6 @@ public class ConstructDBBones {
 			return cs.getInt(1);
 		} catch (Exception e) {
 			System.out.println("Parsing Issue");
-			//e.printStackTrace();
 			return(6);
 		}
 	}

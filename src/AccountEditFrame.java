@@ -118,7 +118,8 @@ public class AccountEditFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			byte[] salt=c.getSalt(user);
+			byte[] salt=c.getSalt();
+			System.out.println(dobF.getText()+salt);
 			int i=c.modifyAccount(null, null, null, dobF.getText(), AppLogin.hashPassword(salt, passF.getText()));
 			handleErrors(i);
 		}

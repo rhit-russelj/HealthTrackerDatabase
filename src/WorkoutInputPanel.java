@@ -112,7 +112,7 @@ public class WorkoutInputPanel extends JPanel{
 			parsedDate = parsedDateStringFormat.parse(attr.get("date"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("parsing issues on date format");
 		}
 		workoutDate=new DateTextField(parsedDate);
 		workoutDate.setEditable(false);

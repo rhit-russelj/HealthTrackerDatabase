@@ -68,6 +68,9 @@ public class WorkoutFrame extends JFrame{
 					if(i==9) {
 						JOptionPane.showMessageDialog(null, "Only POSITIVE numbers are valid inputs for reps, sets, time, weight, and calories.");
 					}
+					if(i==11) {
+						JOptionPane.showMessageDialog(null, "You have already worked on this exercise today!");
+					}
 				} catch (Exception e2) {
 					// TODO: handle exception
 					System.out.println("Parsing int issue");

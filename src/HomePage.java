@@ -1,9 +1,11 @@
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,6 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.RectangleInsets;
 
 import util.HintTextField;
 
@@ -52,8 +64,19 @@ public class HomePage extends JFrame{
 		
 		
 		JButton addWorkout=new JButton("Add Workout Session");
-
 		
+		ArrayList<String> exerL=new ArrayList<String>();
+		try {
+			exerL=c.getExercises();
+		} catch (Exception e) {
+			System.out.println("Problem Retrieving Exercise");
+		}
+		JComboBox exerCombo=new JComboBox(exerL.toArray());
+		
+		JFreeChart chart = createChart(c.getCords("Back Extension"));
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setMouseWheelEnabled(true);
+
 		
 		JPanel buttonPanel=new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -67,7 +90,10 @@ public class HomePage extends JFrame{
 		addWorkout.setBounds(2*this.getWidth()/3-this.getWidth()/8, this.getHeight()/4, this.getWidth()/4, 100);
 		statsPanel.setBounds(0, this.getHeight()/4, this.getWidth()/2, 200);
 		buttonPanel.setBounds(0, this.getHeight()/2, this.getWidth()/2, 300);
-
+		
+		exerCombo.setBounds(this.getWidth()/3+30, this.getHeight()/2-110, 200, 70/2);
+		panel.setBounds(this.getWidth()/3+30, this.getHeight()/2-70, this.getWidth()/2, this.getHeight()/2);
+		
 		
 		buttonPanel.add(addGoalButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
@@ -84,7 +110,8 @@ public class HomePage extends JFrame{
 			j.setFont(new Font("Verdana", Font.BOLD, 17));
 		}
 		
-		
+		mainP.add(exerCombo);
+		mainP.add(panel);
 		mainP.add(mainL);
 		mainP.add(addWorkout);
 		mainP.add(statsPanel);
@@ -274,6 +301,43 @@ editWorkoutButton.addActionListener(new ActionListener() {
 			}
 		});
 		
+	}
+	
+	private static JFreeChart createChart(XYDataset dataset) {
+
+	    JFreeChart chart = ChartFactory.createTimeSeriesChart(
+	        "Exercise Diagram",  // title
+	        "Date",             // x-axis label
+	        "Recorded Value",   // y-axis label
+	        dataset,            // data
+	        true,               // create legend?
+	        true,               // generate tooltips?
+	        false               // generate URLs?
+	    );
+
+	    chart.setBackgroundPaint(Color.white);
+
+	    XYPlot plot = (XYPlot) chart.getPlot();
+	    plot.setBackgroundPaint(Color.lightGray);
+	    plot.setDomainGridlinePaint(Color.white);
+	    plot.setRangeGridlinePaint(Color.white);
+	    plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+	    plot.setDomainCrosshairVisible(true);
+	    plot.setRangeCrosshairVisible(true);
+
+	    XYItemRenderer r = plot.getRenderer();
+	    if (r instanceof XYLineAndShapeRenderer) {
+	        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
+	        renderer.setBaseShapesVisible(true);
+	        renderer.setBaseShapesFilled(true);
+	        renderer.setDrawSeriesLineAsPath(true);
+	    }
+
+	    DateAxis axis = (DateAxis) plot.getDomainAxis();
+	    axis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd"));
+
+	    return chart;
+
 	}
 
 	private void closeFrame() {

@@ -51,7 +51,6 @@ public class AppLogin {
 		        }
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(null, "Login Failed");
-				e.printStackTrace();
 			
 		    } 
 
@@ -95,7 +94,6 @@ public class AppLogin {
 			return true;
 		} catch (SQLException e) {
 			System.out.println("The system ran into a problem.");
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -119,10 +117,10 @@ public class AppLogin {
 			hash = f.generateSecret(spec).getEncoded();
 		} catch (NoSuchAlgorithmException e) {
 			JOptionPane.showMessageDialog(null, "An error occurred during password hashing. See stack trace.");
-			e.printStackTrace();
+
 		} catch (InvalidKeySpecException e) {
 			JOptionPane.showMessageDialog(null, "An error occurred during password hashing. See stack trace.");
-			e.printStackTrace();
+
 		}
 		return getStringFromBytes(hash);
 	}
