@@ -32,6 +32,12 @@ public class GoalFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+				System.out.println(workoutInputPanel.getExercise()+ 
+					Integer.parseInt(workoutInputPanel.getReps())+
+					Integer.parseInt(workoutInputPanel.getSets())+
+					Integer.parseInt(workoutInputPanel.getTime())+
+					Integer.parseInt(workoutInputPanel.getWeight())+
+					workoutInputPanel.getDate());
 					int i=c.addGoal(
 							workoutInputPanel.getExercise(), 
 							Integer.parseInt(workoutInputPanel.getReps()), 
@@ -54,6 +60,9 @@ public class GoalFrame extends JFrame{
 					}
 					if(i==6) {
 						JOptionPane.showMessageDialog(null, "There was a problem parsing data on the method sent to the db.");
+					}
+					if(i==7) {
+						JOptionPane.showMessageDialog(null, "Set the goal in the future");
 					}
 					if(i==9) {
 						JOptionPane.showMessageDialog(null, "Only POSITIVE numbers are valid inputs for reps, sets, time, weight, and calories.");

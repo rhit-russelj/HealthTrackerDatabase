@@ -35,6 +35,22 @@ public class DatabaseCommunication {
 		return exercises;
 	}
 	
+	public ArrayList<String> getGoals(){
+		String query="Select ExerciseName From Goals where userID="+Integer.toString(getUser(user));
+		ArrayList<String> goals=new ArrayList<String>();
+		try {
+			Statement stmt= con.getConnection().createStatement();
+			ResultSet rs=stmt.executeQuery(query);
+			while(rs.next()) {
+				goals.add(rs.getString("ExerciseName"));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Something went wrong with the connection.");
+		}
+		return goals;
+	}
+	
 	public int addStats(int uID, int h, int BMI, int w) {
 		CallableStatement cs = null;
 		int userID = getUser(this.user);
@@ -62,6 +78,7 @@ public class DatabaseCommunication {
 	
 	public int addWorkout(String exerciseName, int reps, int sets, int time, int weight, int cal, String date) {
 		CallableStatement cs = null;
+		CallableStatement goalCheck=null;
 		SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
 		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date parsedDate;
@@ -82,6 +99,16 @@ public class DatabaseCommunication {
 			cs.setDate(9, parsedDate);
 			cs.execute();
 			Main.conn.getConnection().commit();
+			
+			goalCheck=this.con.getConnection().prepareCall("{ ? = CALL GoalCompleted( ?, ? )}");
+			goalCheck.registerOutParameter(1, Types.INTEGER);
+			goalCheck.setInt(2, userID);
+			goalCheck.setString(3, exerciseName);
+			goalCheck.execute();
+			Main.conn.getConnection().commit();
+			if(goalCheck.getInt(1)==1) {
+				return 8;
+			}
 			return cs.getInt(1);
 			
 		} catch (Exception e) {
@@ -268,6 +295,24 @@ public class DatabaseCommunication {
 			return -1;
 		}
 	}
+
+	public int deleteGoal(String exercise) {
+		CallableStatement cs = null;
+		int userID=getUser(this.user);
+		try {
+			cs = this.con.getConnection().prepareCall("{ ? = CALL RemoveGoal( ? , ? )}");
+			cs.registerOutParameter(1, Types.INTEGER);
+			cs.setInt(2, userID);
+			cs.setString(3, exercise);
+			cs.execute();
+			Main.conn.getConnection().commit();
+			return cs.getInt(1);
+			
+		} catch (Exception e) {
+			System.out.println("Parsing issue on delete");
+			return 6;
+		}
+	}	
 	
 	public String formatAttribute(String attributeName) {
 		if(attributeName.equals("rep")) return "Rep";
@@ -294,6 +339,69 @@ public class DatabaseCommunication {
 		return null;
 		
 	}
+
+
+	public HashMap<String, String> getCurrentGoalStats(String exercise) {
+		// TODO Auto-generated method stub
+		HashMap<String, String> attr=new HashMap<String, String>();
+		attr.put("exercise", exercise);
+		String query="Select reps, sets, time, weightGoal, goalDate from Goals where userID = ? and ExerciseName = ?";
+		int userID=getUser(this.user);
+
+		try {
+			PreparedStatement stmt=	Main.conn.getConnection().prepareStatement(query);
+			stmt.setInt(1, userID);
+			stmt.setString(2, exercise);
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				attr.put("reps", Integer.toString(rs.getInt("reps")));
+				attr.put("sets",Integer.toString(rs.getInt("sets")));
+				attr.put("time", Integer.toString(rs.getInt("time")));
+				attr.put("weight", Integer.toString(rs.getInt("weightGoal")));
+				attr.put("date", rs.getDate("goalDate").toString());
+				return attr;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Something went wrong getting goal stats");
+		}
+		
+		return null;
+	}
+
+
+	public int modGoal(String exerciseName, int reps, int sets, int time, int weight, String date) {
+		CallableStatement cs = null;
+		SimpleDateFormat unformattedDobString = new SimpleDateFormat("mm/dd/yyyy");
+		SimpleDateFormat parsedDateStringFormat = new SimpleDateFormat("yyyy-mm-dd");
+		Date parsedDate;
+		int userID=getUser(this.user);
+		try {
+			java.util.Date unformatetedDob=unformattedDobString.parse(date);
+			String parsedDateString=parsedDateStringFormat.format(unformatetedDob);
+			parsedDate=Date.valueOf(parsedDateString);
+			cs = this.con.getConnection().prepareCall("{ ? = CALL ModifyGoal( ? , ?, ?, ?, ?, ?, ? )}");
+			cs.registerOutParameter(1, Types.INTEGER);
+			cs.setInt(2, userID);
+			cs.setString(3, exerciseName);
+			cs.setInt(4, reps);
+			cs.setInt(5, sets);
+			cs.setInt(6, time);
+			cs.setInt(7, weight);
+			cs.setDate(8, parsedDate);
+			cs.execute();
+			Main.conn.getConnection().commit();
+			return cs.getInt(1);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Parsing issue");
+			e.printStackTrace();
+			return 6;
+		}	}
+
+
+
 }
 
 

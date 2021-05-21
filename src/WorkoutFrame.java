@@ -65,6 +65,10 @@ public class WorkoutFrame extends JFrame{
 					if(i==6) {
 						JOptionPane.showMessageDialog(null, "There was a problem parsing data on the method sent to the db.");
 					}
+					if(i==8) {
+						closeFrame();
+						JOptionPane.showMessageDialog(null, "CONGRATULATIONS! You have reached your goal for this Exercise! Modify your goal to reach greater heights!");
+					}
 					if(i==9) {
 						JOptionPane.showMessageDialog(null, "Only POSITIVE numbers are valid inputs for reps, sets, time, weight, and calories.");
 					}

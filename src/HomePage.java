@@ -4,13 +4,16 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -56,6 +59,7 @@ public class HomePage extends JFrame{
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		JButton updateStats=new JButton("Update Body Stats");
 		JButton addGoalButton = new JButton("Add Goal");
+		JButton modGoalButton= new JButton("Modify Goal");
 		JButton editAccButton = new JButton("Edit Account");
 		JButton editWorkoutButton = new JButton("Edit Previous Workout");
 		JButton signOut = new JButton("Log Out");
@@ -66,6 +70,8 @@ public class HomePage extends JFrame{
 
 		
 		buttonPanel.add(addGoalButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
+		buttonPanel.add(modGoalButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
 		buttonPanel.add(editWorkoutButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5, 10)));
@@ -95,6 +101,42 @@ public class HomePage extends JFrame{
 				WorkoutFrame workoutPopUp = new WorkoutFrame();
 				workoutPopUp.setVisible(true);
 				workoutPopUp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
+			}
+		});
+		
+		modGoalButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame frame=new JFrame("Choose Goal");
+				ArrayList<String> gls=new ArrayList<String>();
+				try {
+					gls=c.getGoals();
+				} catch (Exception e) {
+					System.out.println("Problem Retrieving goals");
+				}
+				if(gls.size()==0) {
+					JOptionPane.showMessageDialog(null, "You currently do not have any goals! Try setting one by clicking the Add Goal Button!");
+					return;
+				}
+				JComboBox gCombo=new JComboBox(gls.toArray());
+				frame.add(gCombo);
+				frame.pack();
+				frame.setVisible(true);
+				frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				
+				gCombo.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						String exerciseN=(String) gCombo.getSelectedItem();
+						GoalModifyingFrame gmF=new GoalModifyingFrame(exerciseN);
+						gmF.setVisible(true);
+						gmF.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+						frame.setVisible(false);
+					}
+				});
 			}
 		});
 		
