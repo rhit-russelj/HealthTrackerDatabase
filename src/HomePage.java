@@ -136,6 +136,9 @@ public class HomePage extends JFrame{
 			}
 		});
 		
+<<<<<<< HEAD
+>>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
+=======
 >>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 		editAccButton.addActionListener(new ActionListener() {
 			

@@ -122,6 +122,9 @@ public class WorkoutInputPanel extends JPanel{
 		labelPanel.add(setL);
 		labelPanel.add(timeL);
 		labelPanel.add(weightL);
+<<<<<<< HEAD
+>>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
+=======
 >>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 		labelPanel.add(dateL);
 		
@@ -131,7 +134,10 @@ public class WorkoutInputPanel extends JPanel{
 		inputPanel.add(time);
 		inputPanel.add(weight);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		inputPanel.add(cal);
+=======
+>>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 =======
 >>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 		inputPanel.add(workoutDate);
@@ -164,7 +170,11 @@ public class WorkoutInputPanel extends JPanel{
 	
 	public String getCal() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return (reps.getText().equals("i.e. 300")) ? "0" : reps.getText();
+=======
+		return (cal.getText().equals("i.e. 300")) ? "0" : reps.getText();
+>>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 =======
 		return (cal.getText().equals("i.e. 300")) ? "0" : reps.getText();
 >>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
