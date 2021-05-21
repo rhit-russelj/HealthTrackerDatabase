@@ -98,6 +98,45 @@ public class HomePage extends JFrame{
 			}
 		});
 		
+<<<<<<< HEAD
+=======
+		modGoalButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame frame=new JFrame("Choose Goal");
+				ArrayList<String> gls=new ArrayList<String>();
+				try {
+					gls=c.getGoals();
+				} catch (Exception e) {
+					System.out.println("Problem Retrieving goals");
+				}
+				if(gls.size()==0) {
+					JOptionPane.showMessageDialog(null, "You currently do not have any goals! Try setting one by clicking the Add Goal Button!");
+					return;
+				}
+				JComboBox gCombo=new JComboBox(gls.toArray());
+				frame.add(gCombo);
+				frame.pack();
+				frame.setVisible(true);
+				frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				
+				gCombo.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						String exerciseN=(String) gCombo.getSelectedItem();
+						GoalModifyingFrame gmF=new GoalModifyingFrame(exerciseN);
+						gmF.setVisible(true);
+						gmF.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+						frame.setVisible(false);
+					}
+				});
+			}
+		});
+		
+>>>>>>> parent of d76524f (implemented a lot of stuff mainly around modifying existing data)
 		editAccButton.addActionListener(new ActionListener() {
 			
 			@Override
